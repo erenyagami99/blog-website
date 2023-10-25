@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { loginUser, registerUser } from "../services/userService";
+import axios from "axios";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ const LoginPage = () => {
   const [signupActive, setSignupActive] = useState(false);
   const [viewPass, setViewPass] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-
+  const [viewImage, setViewImage] = useState(null);
   const handleLogin = async (e) => {
     const reqBody = {
       email: email,
@@ -23,11 +24,10 @@ const LoginPage = () => {
     try {
       console.log("Sending API request...");
       const response = await loginUser(reqBody);
-
+      console.log(response, "stop");
       localStorage.setItem("token", response.token);
-
-      console.log("srinivas", response);
       navigate("/");
+      window.location.reload();
     } catch (error) {
       console.error("Login error:", error.message);
     }
@@ -35,18 +35,14 @@ const LoginPage = () => {
 
   const handleSignup = async (e) => {
     console.log(selectedImage);
-    const formData = new FormData();
-
-    if (selectedImage) {
-      formData.append("profilePicture", selectedImage);
-    }
-    formData.append("name", name);
-    formData.append("email", email);
-    formData.append("password", password);
-
+    const reqBody = {
+      name: name,
+      email: email,
+      password: password,
+      profilePicture: selectedImage,
+    };
     try {
-      console.log(formData, "sri");
-      const response = await registerUser(formData);
+      const response = await registerUser(reqBody);
 
       console.log("Signup response:", response);
     } catch (error) {
@@ -55,15 +51,28 @@ const LoginPage = () => {
   };
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setSelectedImage(reader.result);
-      };
-      reader.readAsDataURL(file);
+    const picture = e.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setViewImage(reader.result);
+    };
+    reader.readAsDataURL(picture);
+    if (picture.type === "image/jpeg" || picture.type === "image/png") {
+      const dataForm = new FormData();
+      dataForm.append("file", picture);
+      dataForm.append("upload_preset", "uploads");
+      axios
+        .post(
+          "https://api.cloudinary.com/v1_1/dulxvqaeg/image/upload",
+          dataForm
+        )
+        .then((res) => {
+          setSelectedImage(res.data.url);
+        })
+        .catch((err) => console.log(err));
     }
   };
+
   useEffect(() => {
     if (email.includes("@gmail.com") > 0 && password.length > 5) {
       setButtonActive(true);
@@ -138,9 +147,9 @@ const LoginPage = () => {
         <div className="form-container">
           <h1>User Registration</h1>
           <div className="login-form">
-            {selectedImage ? (
+            {viewImage ? (
               <img
-                src={selectedImage}
+                src={viewImage}
                 alt="Selected"
                 style={{ width: "100px", height: "100px" }}
               />

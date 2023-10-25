@@ -1,29 +1,11 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
-const multer = require("multer");
-const path = require("path");
 
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/");
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(
-      null,
-      file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
-    );
-  },
-});
-
-const upload = multer({ storage: storage });
-
 const registerUser = asyncHandler(async (req, res) => {
-  console.log("srinivas");
-  const { name, email, password } = req.body;
+  const { name, email, password, profilePicture } = req.body;
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
   if (!name || !email || !password) {
@@ -31,10 +13,6 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error("Please Enter all the fields");
   }
   try {
-    let profilePicture;
-    if (req.file) {
-      profilePicture = req.file.path;
-    }
     const user = await User.create({
       name: name,
       email: email,
@@ -56,8 +34,6 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
-const uploadMiddleware = upload.single("profilePicture");
-
 const loginUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
@@ -74,8 +50,8 @@ const loginUser = asyncHandler(async (req, res) => {
 
   const token = jwt.sign({ _id: user._id }, process.env.SECRET_KEY);
 
-  res.status(200).json({ token });
-  console.log(token, "token");
+  res.status(200).json({ user, token });
+  console.log(user, "user");
 });
 
 const currentUser = asyncHandler(async (req, res) => {
@@ -117,4 +93,4 @@ const currentUser = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { registerUser, uploadMiddleware, currentUser, loginUser };
+module.exports = { registerUser, currentUser, loginUser };

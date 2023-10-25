@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { getBlogs } from "../services/blogService";
 import { currentUser } from "../services/userService";
-import CreatePortalPopup from "../components/popUps/createPortalPopup";
-import UpdatePortalPopup from "../components/popUps/updatePortalPopup";
-import DeletePortalPopup from "../components/popUps/deletePortalPopup";
+import { useNavigate } from "react-router";
+import UpdateBlogPopup from "../components/popUps/updateBlogPopup";
+import DeleteBlogPopup from "../components/popUps/deleteBlogPopup";
+import moment from "moment";
 
 const HomePage = () => {
+  const navigate = useNavigate();
   const [user, setUser] = useState([]);
   const [blogs, setBlogs] = useState([]);
-
-  const [modal, setModal] = useState(false);
   const [updateModal, setUpdateModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
 
-  const [portal, setPortal] = useState();
+  const [blog, setBlog] = useState();
 
   const handleLogout = () => {
     localStorage.clear();
@@ -45,7 +45,13 @@ const HomePage = () => {
     <>
       <div className="home-container">
         <div className="header">
-          <h1>{user.name}</h1>
+          <h1
+            onClick={() => {
+              navigate("/profile");
+            }}
+          >
+            {user.name}
+          </h1>
           <button
             onClick={() => {
               handleLogout();
@@ -58,7 +64,7 @@ const HomePage = () => {
         <div
           className="create-blog"
           onClick={() => {
-            setModal(true);
+            navigate("/create-blog");
           }}
         >
           <img src="/images/add-icon.png" alt="/" />
@@ -81,11 +87,15 @@ const HomePage = () => {
                 <p>{blog.author.name}</p>
               </div>
               <div>
+                <h1>Posted Date:</h1>
+                <p>{moment(blog.updatedAt).format("DD-MM-YYYY")}</p>
+              </div>
+              <div>
                 <button
                   className="delete-button"
                   onClick={() => {
                     setDeleteModal(true);
-                    setPortal(portal);
+                    setBlog(blog);
                   }}
                 >
                   DELETE
@@ -94,7 +104,7 @@ const HomePage = () => {
                   className="update-button"
                   onClick={() => {
                     setUpdateModal(true);
-                    setPortal(portal);
+                    setBlog(blog);
                   }}
                 >
                   UPDATE
@@ -104,12 +114,11 @@ const HomePage = () => {
           ))}
         </div>
       </div>
-      {modal && <CreatePortalPopup setModal={setModal} />}
       {updateModal && (
-        <UpdatePortalPopup setModal={setUpdateModal} portal={portal} />
+        <UpdateBlogPopup setModal={setUpdateModal} blog={blog} user={user} />
       )}
       {deleteModal && (
-        <DeletePortalPopup setModal={setDeleteModal} portal={portal} />
+        <DeleteBlogPopup setModal={setDeleteModal} blog={blog} user={user} />
       )}
     </>
   );

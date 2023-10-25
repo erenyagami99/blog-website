@@ -44,7 +44,18 @@ const updateBlog = asyncHandler(async (req, res) => {
     const updatedData = req.body;
     const options = { new: true };
 
-    const result = await Blog.findByIdAndUpdate(id, updatedData, options);
+    const user = await User.findById(updatedData.postedBy);
+
+    if (!user) {
+      res.status(400);
+      throw new Error("User not found");
+    }
+
+    const result = await Blog.findByIdAndUpdate(
+      id,
+      { ...updatedData, author: user },
+      options
+    );
 
     res.send(result);
   } catch (error) {
@@ -57,7 +68,7 @@ const deleteBlog = asyncHandler(async (req, res) => {
     const id = req.params.id;
     const data = await Blog.findByIdAndDelete(id);
     console.log(data, "data");
-    res.send(`Document with title ${data.title} has been deleted..`);
+    res.send(`Document with title ${data.heading} has been deleted..`);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

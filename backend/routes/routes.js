@@ -2,7 +2,7 @@ const { Router } = require("express");
 
 const {
   registerUser,
-  uploadMiddleware,
+
   currentUser,
   loginUser,
 } = require("../controllers/userController");
@@ -16,7 +16,7 @@ const {
 
 const router = Router();
 
-router.post("/register", uploadMiddleware, registerUser);
+router.post("/register", registerUser);
 
 router.post("/login", loginUser);
 

@@ -1,15 +1,19 @@
 import React from "react";
 import { deleteBlog } from "../../services/blogService";
 
-const DeletePortalPopup = (props) => {
-  const { setModal, portal } = props;
+const DeleteBlogPopup = (props) => {
+  const { setModal, blog, user } = props;
 
   const deletePortalFromApi = async () => {
     try {
-      const id = portal._id;
-      await deleteBlog(id);
-      setModal(false);
-      window.location.reload();
+      const id = blog._id;
+      if (user._id === blog.postedBy) {
+        await deleteBlog(id);
+        setModal(false);
+        window.location.reload();
+      } else {
+        console.log("You are not the author of the Blog");
+      }
     } catch (error) {
       console.log("Error:", error);
     }
@@ -26,7 +30,7 @@ const DeletePortalPopup = (props) => {
         >
           X
         </p>
-        <h1>Are you sure, you want to delete this portal?</h1>
+        <h1>Are you sure, you want to delete this Blog?</h1>
         <div>
           <button
             className="logout-button"
@@ -50,4 +54,4 @@ const DeletePortalPopup = (props) => {
   );
 };
 
-export default DeletePortalPopup;
+export default DeleteBlogPopup;

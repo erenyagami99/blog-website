@@ -1,7 +1,10 @@
-export function registerUser(formData) {
+export function registerUser(reqBody) {
   return fetch("http://localhost:5000/register", {
     method: "POST",
-    body: formData,
+    body: JSON.stringify(reqBody),
+    headers: {
+      "Content-Type": "application/json",
+    },
   }).then(function (response) {
     return response.json();
   });

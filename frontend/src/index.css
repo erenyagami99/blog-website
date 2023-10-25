@@ -25,7 +25,16 @@ code {
 .create-blog img {
   width: 75px;
 }
-
+.blog-container {
+  max-width: 1350px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.blog-div {
+  display: flex;
+  justify-content: space-between;
+}
 .login-container {
   display: flex;
   align-items: center;
@@ -91,6 +100,34 @@ select {
   color: white;
 }
 
+.title-input {
+  height: 60px;
+  font-size: 22px;
+  margin-bottom: 10px;
+  padding: 8px;
+  width: 500px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+}
+.description-input {
+  height: 200px;
+  font-size: 22px;
+  margin-bottom: 10px;
+  padding: 8px;
+  width: 500px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  box-sizing: content-box;
+}
+
 .input-field {
   height: 30px;
   font-size: 22px;
@@ -151,6 +188,11 @@ button.filled {
 }
 .header h1 {
   text-decoration: underline;
+  cursor: pointer;
+}
+.back-arrow {
+  width: 50px;
+  padding: 30px;
   cursor: pointer;
 }
 
@@ -225,7 +267,7 @@ button.filled {
   max-width: 500px;
   width: 100%;
   flex: 1;
-  height: 350px;
+  height: 450px;
   background-color: #537cbd;
   border-radius: 10px;
 }
