@@ -4,7 +4,7 @@ import { deleteBlog } from "../../services/blogService";
 const DeleteBlogPopup = (props) => {
   const { setModal, blog, user } = props;
 
-  const deletePortalFromApi = async () => {
+  const deleteBlogFromApi = async () => {
     try {
       const id = blog._id;
       if (user._id === blog.postedBy) {
@@ -35,7 +35,7 @@ const DeleteBlogPopup = (props) => {
           <button
             className="logout-button"
             onClick={() => {
-              deletePortalFromApi();
+              deleteBlogFromApi();
             }}
           >
             Yes
