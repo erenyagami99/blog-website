@@ -30,10 +30,8 @@ const BlogPage = () => {
     };
 
     try {
-      console.log("Sending API request...");
       const response = await createBlog(reqBody);
       navigate("/");
-
       console.log(response);
     } catch (error) {
       console.error("Error:", error.message);

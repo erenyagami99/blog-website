@@ -31,7 +31,11 @@ const ProfilePage = () => {
         />
         <div>
           {user.profilePicture ? (
-            <img src={user.profilePicture} alt="Selected" />
+            <img
+              className="profile-picture"
+              src={user.profilePicture}
+              alt="Selected"
+            />
           ) : (
             <img src="/images/user.png" alt="/" />
           )}

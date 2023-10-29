@@ -2,7 +2,6 @@ const { Router } = require("express");
 
 const {
   registerUser,
-
   currentUser,
   loginUser,
 } = require("../controllers/userController");
@@ -17,9 +16,7 @@ const {
 const router = Router();
 
 router.post("/register", registerUser);
-
 router.post("/login", loginUser);
-
 router.get("/user", currentUser);
 
 router.post("/create-blog", createBlog);

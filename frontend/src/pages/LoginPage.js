@@ -22,12 +22,13 @@ const LoginPage = () => {
     };
 
     try {
-      console.log("Sending API request...");
       const response = await loginUser(reqBody);
       console.log(response, "stop");
       localStorage.setItem("token", response.token);
-      navigate("/");
-      window.location.reload();
+      if (response.token !== undefined) {
+        navigate("/");
+        window.location.reload();
+      }
     } catch (error) {
       console.error("Login error:", error.message);
     }
